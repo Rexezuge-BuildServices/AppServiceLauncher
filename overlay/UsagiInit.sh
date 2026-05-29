@@ -11,7 +11,7 @@ if [ -n "$NODE_URI" ] && [ -n "$TRACKER_URL" ] && \
     /.AppServiceLauncher/ChordDHT/ChordDHT-Node \
         -uri "$NODE_URI" \
         -tracker-url "$TRACKER_URL" \
-        -listen :8443 \
+        -listen :58443 \
         -tls-cert /.AppServiceLauncher/etc/ssl/selfsigned/server.crt \
         -tls-key  /.AppServiceLauncher/etc/ssl/selfsigned/server.key \
         -auth.enabled \
