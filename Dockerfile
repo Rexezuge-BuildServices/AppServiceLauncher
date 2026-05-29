@@ -28,8 +28,10 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certifi
 
 COPY overlay/ /
 
+RUN chmod +x /launcher.sh
+
 FROM scratch
 
 COPY --from=runtime / /.AppServiceLauncher/
 
-ENTRYPOINT ["/.AppServiceLauncher/UsagiInit"]
+ENTRYPOINT ["/.AppServiceLauncher/launcher.sh"]
