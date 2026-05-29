@@ -1,4 +1,5 @@
 FROM alpine:3 AS su-exec-builder
+
 RUN apk add --no-cache gcc musl-dev \
  && wget -qO /tmp/su-exec.c https://raw.githubusercontent.com/ncopa/su-exec/master/su-exec.c \
  && cc -static -Wall -Werror -o /tmp/su-exec /tmp/su-exec.c \
@@ -20,11 +21,17 @@ RUN apt-get update \
 RUN mkdir -p /tmp/ssl/selfsigned \
  && openssl req -x509 -newkey rsa:2048 -days 365 -nodes -keyout /tmp/ssl/selfsigned/server.key -out /tmp/ssl/selfsigned/server.crt -subj "/CN=localhost"
 
+RUN mkdir -p /tmp/ChordDHT \
+ && curl -o /tmp/ChordDHT/CERTIFICATE_REVOCATION_LIST.json -L "https://raw.githubusercontent.com/Rexezuge-ConfigurationFiles/ChordDHT-TrustAnchors/refs/heads/main/CERTIFICATE_REVOCATION_LIST.json" \
+ && curl -o /tmp/ChordDHT/CERTIFICATE_AUTHORITY_PUBLIC_KEY.b64 -L "https://raw.githubusercontent.com/Rexezuge-ConfigurationFiles/ChordDHT-TrustAnchors/refs/heads/main/CERTIFICATE_AUTHORITY_PUBLIC_KEY.b64" \
+
 FROM rexezugedockerutils/usagi-init:release AS runtime
 
 COPY --from=cloudflared /cloudflared /usr/local/bin/cloudflared
 
-COPY --from=chorddht /ChordDHT-Node /ChordDHT-Node
+COPY --from=builder /tmp/ChordDHT /ChordDHT
+
+COPY --from=chorddht /ChordDHT-Node /ChordDHT/ChordDHT-Node
 
 COPY --from=nginx-static /nginx /usr/sbin/nginx
 
