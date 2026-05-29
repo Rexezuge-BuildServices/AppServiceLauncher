@@ -37,5 +37,9 @@ mkdir -p /tmp/nginx/logs
 
 # Original application — exec replaces sh (not guarded, not restarted)
 if [ -n "$APP_CMD" ]; then
-    exec $APP_CMD
+    if [ -n "$APP_USER" ]; then
+        exec /.AppServiceLauncher/su-exec "$APP_USER" $APP_CMD
+    else
+        exec $APP_CMD
+    fi
 fi

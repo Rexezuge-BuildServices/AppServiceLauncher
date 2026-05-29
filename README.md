@@ -27,6 +27,7 @@ If no `CMD` is given, the container runs in **background-services-only** mode (n
 
 | Variable | Service | Description |
 |---|---|---|
+| `APP_USER` | AppServiceLauncher | Unix user to run the application as. If set, privileges are dropped via `su-exec` before exec'ing `APP_CMD`. If unset, the application inherits the container's current user (typically root). |
 | `CLOUDFLARE_TOKEN` | cloudflared | Cloudflare Tunnel token (`cloudflared tunnel … run --token`). If unset, cloudflared is skipped. |
 | `NODE_URI` | ChordDHT | Canonical HTTPS URI for this node (`https://node.example.com`). |
 | `TRACKER_URL` | ChordDHT | Bootstrap tracker URL. |

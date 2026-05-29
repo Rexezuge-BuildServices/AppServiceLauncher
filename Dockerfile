@@ -1,3 +1,9 @@
+FROM alpine:3 AS su-exec-builder
+RUN apk add --no-cache gcc musl-dev \
+ && wget -qO /tmp/su-exec.c https://raw.githubusercontent.com/ncopa/su-exec/master/su-exec.c \
+ && cc -static -Wall -Werror -o /tmp/su-exec /tmp/su-exec.c \
+ && strip /tmp/su-exec
+
 FROM rexezugedockerutils/cloudflared AS cloudflared
 
 FROM rexezugedockerutils/chorddht AS chorddht
@@ -25,6 +31,8 @@ COPY --from=nginx-static /nginx /usr/sbin/nginx
 COPY --from=builder /tmp/ssl/selfsigned /etc/ssl/selfsigned
 
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+
+COPY --from=su-exec-builder /tmp/su-exec /su-exec
 
 COPY overlay/ /
 
