@@ -1,6 +1,6 @@
 # AppServiceLauncher
 
-A reusable Docker layer that adds [cloudflared](https://github.com/cloudflare/cloudflared), [ChordDHT](https://github.com/rexezuge/ChordDHT), and nginx as guarded background services to any existing container image. The original image's entrypoint and CMD run unmodified and unguarded — if the app exits, UsagiInit stays up and continues managing the background services.
+A reusable Docker layer that adds [Cloudflared](https://github.com/Rexezuge-DockerUtils/Cloudflared), [ChordDHT](https://github.com/Rexezuge-DockerUtils/ChordDHT), and [Nginx-Static](https://github.com/Rexezuge-DockerUtils/Nginx-Static) as guarded background services to any existing container image. The original image's entrypoint and CMD run unmodified and unguarded — if the app exits, [UsagiInit](https://github.com/Rexezuge-DockerUtils/UsagiInit) stays up and continues managing the background services.
 
 ## How it works
 
@@ -16,8 +16,8 @@ CMD ["your-original-entrypoint", "--original-args"]
 
 At container start:
 
-1. `launcher.sh` captures the Docker `CMD` args as `APP_CMD` and exec's [UsagiInit](https://github.com/rexezuge/UsagiInit) with the init script.
-2. `UsagiInit.sh` starts **ChordDHT**, **cloudflared**, and **nginx** as guarded background services (UsagiInit will restart them if they crash).
+1. `launcher.sh` captures the Docker `CMD` args as `APP_CMD` and exec's [UsagiInit](https://github.com/Rexezuge-DockerUtils/UsagiInit) with the init script.
+2. `UsagiInit.sh` starts **ChordDHT**, **cloudflared**, and **nginx** as guarded background services (UsagiInit will restart them if they crash). Services whose required environment variables are not set are skipped with a warning to stderr.
 3. `exec $APP_CMD` replaces the shell with the original application — this process is **not** registered as a service and is **never restarted** by UsagiInit.
 4. When the original app exits, UsagiInit enters pure guardian mode and continues monitoring the three background services.
 
@@ -25,18 +25,20 @@ If no `CMD` is given, the container runs in **background-services-only** mode (n
 
 ## Environment variables
 
-| Variable | Required | Description |
+| Variable | Service | Description |
 |---|---|---|
-| `CLOUDFLARE_TOKEN` | Yes | Cloudflare Tunnel token (`cloudflared tunnel … run --token`) |
-| `NODE_URI` | Yes | ChordDHT node URI |
-| `TRACKER_URL` | Yes | ChordDHT tracker URL |
-| `CA_PUBLIC_KEY_BASE64` | Yes | Base64-encoded CA public key for ChordDHT mutual TLS auth |
-| `CHORD_AUTH_NODE_CERT` | Yes | PEM content of the node's TLS client certificate |
-| `CHORD_AUTH_NODE_PRIVATE_KEY` | Yes | PEM content of the node's TLS private key |
+| `CLOUDFLARE_TOKEN` | cloudflared | Cloudflare Tunnel token (`cloudflared tunnel … run --token`). If unset, cloudflared is skipped. |
+| `NODE_URI` | ChordDHT | Canonical HTTPS URI for this node (`https://node.example.com`). |
+| `TRACKER_URL` | ChordDHT | Bootstrap tracker URL. |
+| `CA_PUBLIC_KEY_BASE64` | ChordDHT | Base64-encoded CA Ed25519 public key for mutual TLS auth. |
+| `CHORD_AUTH_NODE_CERT` | ChordDHT | JSON content of the node's CA-issued certificate. |
+| `CHORD_AUTH_NODE_PRIVATE_KEY` | ChordDHT | Base64-encoded Ed25519 private key for the node. |
+
+All five ChordDHT variables must be set together — if any is missing, ChordDHT is skipped entirely with a warning to stderr.
 
 ## nginx
 
-nginx listens on port **80** and proxies `/chord/` and `/api/chord/` to ChordDHT at `:8443`. All other routes return 404 by default — the original application's own port is unaffected and accessible directly.
+nginx listens on port **80** and proxies `/chord/` to ChordDHT at `:8443`. All other routes return 404 by default — the original application's own port is unaffected and accessible directly.
 
 To add custom locations, mount or build additional `.conf` files into `/.AppServiceLauncher/etc/nginx/conf.d/`.
 
@@ -53,11 +55,11 @@ CMD ["docker-entrypoint.sh", "postgres"]
 ```sh
 docker run \
   -e CLOUDFLARE_TOKEN=… \
-  -e NODE_URI=… \
-  -e TRACKER_URL=… \
+  -e NODE_URI=https://node.example.com \
+  -e TRACKER_URL=https://tracker.example.com \
   -e CA_PUBLIC_KEY_BASE64=… \
-  -e CHORD_AUTH_NODE_CERT="$(cat node.crt)" \
-  -e CHORD_AUTH_NODE_PRIVATE_KEY="$(cat node.key)" \
+  -e CHORD_AUTH_NODE_CERT="$(cat node.cert.json)" \
+  -e CHORD_AUTH_NODE_PRIVATE_KEY="$(cat node.privkey.b64)" \
   -e POSTGRES_PASSWORD=secret \
   my-postgres-with-launcher
 ```
