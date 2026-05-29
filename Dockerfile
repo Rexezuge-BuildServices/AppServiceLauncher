@@ -23,7 +23,7 @@ RUN mkdir -p /tmp/ssl/selfsigned \
 
 RUN mkdir -p /tmp/ChordDHT \
  && curl -o /tmp/ChordDHT/CERTIFICATE_REVOCATION_LIST.json -L "https://raw.githubusercontent.com/Rexezuge-ConfigurationFiles/ChordDHT-TrustAnchors/refs/heads/main/CERTIFICATE_REVOCATION_LIST.json" \
- && curl -o /tmp/ChordDHT/CERTIFICATE_AUTHORITY_PUBLIC_KEY.b64 -L "https://raw.githubusercontent.com/Rexezuge-ConfigurationFiles/ChordDHT-TrustAnchors/refs/heads/main/CERTIFICATE_AUTHORITY_PUBLIC_KEY.b64" \
+ && curl -o /tmp/ChordDHT/CERTIFICATE_AUTHORITY_PUBLIC_KEY.b64 -L "https://raw.githubusercontent.com/Rexezuge-ConfigurationFiles/ChordDHT-TrustAnchors/refs/heads/main/CERTIFICATE_AUTHORITY_PUBLIC_KEY.b64"
 
 FROM rexezugedockerutils/usagi-init:release AS runtime
 
