@@ -28,7 +28,7 @@ jobs:
     - name: Set Image Name and Tags
       id: vars
       run: |
-        IMAGE_NAME=rexezugebuild/feishin
+        IMAGE_NAME=rexezugebuild/appservicelauncher
         GIT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
         UNIX_TS=$(date +%s)
         if [[ "${{ github.event_name }}" == "schedule" ]]; then
