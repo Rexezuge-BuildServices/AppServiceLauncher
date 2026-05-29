@@ -16,7 +16,7 @@ FROM debian:12 AS builder
 WORKDIR /tmp
 
 RUN apt-get update \
- && apt-get install -y --no-install-recommends ca-certificates openssl
+ && apt-get install -y --no-install-recommends ca-certificates openssl curl
 
 RUN mkdir -p /tmp/ssl/selfsigned \
  && openssl req -x509 -newkey rsa:2048 -days 365 -nodes -keyout /tmp/ssl/selfsigned/server.key -out /tmp/ssl/selfsigned/server.crt -subj "/CN=localhost"
