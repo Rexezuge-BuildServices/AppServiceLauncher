@@ -1,0 +1,56 @@
+types {
+    text/html                             html htm shtml;
+    text/css                              css;
+    text/xml                              xml;
+    text/plain                            txt;
+    text/mathml                           mml;
+    text/vnd.sun.j2me.app-descriptor     jad;
+    text/vnd.wap.wml                      wml;
+    text/x-component                      htc;
+
+    image/avif                            avif;
+    image/gif                             gif;
+    image/jpeg                            jpeg jpg;
+    image/png                             png;
+    image/svg+xml                         svg svgz;
+    image/tiff                            tif tiff;
+    image/vnd.wap.wbmp                    wbmp;
+    image/webp                            webp;
+    image/x-icon                          ico;
+    image/x-jng                           jng;
+    image/x-ms-bmp                        bmp;
+
+    font/woff                             woff;
+    font/woff2                            woff2;
+
+    application/atom+xml                  atom;
+    application/geo+json                  geojson;
+    application/javascript                js mjs;
+    application/json                      json;
+    application/ld+json                   jsonld;
+    application/manifest+json             webmanifest;
+    application/rss+xml                   rss;
+    application/wasm                      wasm;
+    application/x-font-ttf                ttf;
+    application/x-web-app-manifest+json   webapp;
+    application/xhtml+xml                 xhtml;
+    application/xml                       rss atom xml xsl;
+
+    audio/midi                            mid midi kar;
+    audio/mpeg                            mp3;
+    audio/ogg                             ogg;
+    audio/x-m4a                           m4a;
+    audio/x-realaudio                     ra;
+
+    video/3gpp                            3gpp 3gp;
+    video/mp2t                            ts;
+    video/mp4                             mp4;
+    video/mpeg                            mpeg mpg;
+    video/ogg                             ogv;
+    video/quicktime                       mov;
+    video/webm                            webm;
+    video/x-flv                           flv;
+    video/x-m4v                           m4v;
+    video/x-ms-wmv                        wmv;
+    video/x-msvideo                       avi;
+}
