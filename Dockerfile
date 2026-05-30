@@ -43,11 +43,11 @@ COPY --from=su-exec-builder /tmp/su-exec /su-exec
 
 COPY overlay/ /
 
-RUN chmod +x /launcher.sh
-
 FROM scratch
 
 COPY --from=rexezugedockerutils/usagi-init:release / /
+
+RUN chmod +x /.AppServiceLauncher/launcher.sh
 
 COPY --from=runtime / /.AppServiceLauncher
 
