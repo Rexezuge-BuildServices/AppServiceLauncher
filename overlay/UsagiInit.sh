@@ -7,7 +7,7 @@ if [ -n "$NODE_URI" ] && [ -n "$TRACKER_URL" ] && \
     echo "$CHORD_AUTH_NODE_CERT" > "$node_certificate_file"
     node_private_key_file=$(mktemp)
     echo "$CHORD_AUTH_NODE_PRIVATE_KEY" > "$node_private_key_file"
-    IFS='' read -r ca_public_key_base64 < /.AppServiceLauncher/CERTIFICATE_AUTHORITY_PUBLIC_KEY.b64
+    IFS='' read -r ca_public_key_base64 < /.AppServiceLauncher/ChordDHT/CERTIFICATE_AUTHORITY_PUBLIC_KEY.b64
     /.AppServiceLauncher/ChordDHT/ChordDHT-Node \
         -uri "$NODE_URI" \
         -tracker-url "$TRACKER_URL" \
