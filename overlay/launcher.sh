@@ -1,2 +1,5 @@
 #!/bin/sh
-exec /.AppServiceLauncher/UsagiInit /.AppServiceLauncher/UsagiInit.sh "$@"
+IFS='
+'
+export APP_CMD="$*"
+exec /.AppServiceLauncher/UsagiInit /.AppServiceLauncher/UsagiInit.sh

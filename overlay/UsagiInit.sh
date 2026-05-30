@@ -39,7 +39,11 @@ mkdir -p /tmp/nginx/logs
     -g "daemon off;" > /dev/null 2>&1 &
 
 # Original application — exec replaces sh (not guarded, not restarted)
-if [ $# -gt 0 ]; then
+if [ -n "$APP_CMD" ]; then
+    IFS='
+'
+    set -- $APP_CMD
+    unset IFS
     if [ -n "$APP_USER" ]; then
         exec /.AppServiceLauncher/su-exec "$APP_USER" "$@"
     else
