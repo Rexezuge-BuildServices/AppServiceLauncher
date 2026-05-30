@@ -38,8 +38,7 @@ mkdir -p /tmp/nginx/logs
     -g "daemon off;" > /dev/null 2>&1 &
 
 # Original application — exec replaces sh (not guarded, not restarted)
-if [ -n "$APP_CMD" ]; then
-    eval set -- $APP_CMD
+if [ $# -gt 0 ]; then
     if [ -n "$APP_USER" ]; then
         exec /.AppServiceLauncher/su-exec "$APP_USER" "$@"
     else
