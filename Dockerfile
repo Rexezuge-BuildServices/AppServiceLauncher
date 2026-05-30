@@ -47,8 +47,6 @@ FROM scratch
 
 COPY --from=rexezugedockerutils/usagi-init:release / /
 
-RUN chmod +x /.AppServiceLauncher/launcher.sh
-
 COPY --from=runtime / /.AppServiceLauncher
 
 ENTRYPOINT ["/.AppServiceLauncher/launcher.sh"]
