@@ -25,7 +25,7 @@ RUN mkdir -p /tmp/ChordDHT \
  && curl -o /tmp/ChordDHT/CERTIFICATE_REVOCATION_LIST.json -L "https://raw.githubusercontent.com/Rexezuge-ConfigurationFiles/ChordDHT-TrustAnchors/refs/heads/main/CERTIFICATE_REVOCATION_LIST.json" \
  && curl -o /tmp/ChordDHT/CERTIFICATE_AUTHORITY_PUBLIC_KEY.b64 -L "https://raw.githubusercontent.com/Rexezuge-ConfigurationFiles/ChordDHT-TrustAnchors/refs/heads/main/CERTIFICATE_AUTHORITY_PUBLIC_KEY.b64"
 
-FROM rexezugedockerutils/usagi-init:release AS runtime
+FROM scratch AS runtime
 
 COPY --from=cloudflared /cloudflared /usr/local/bin/cloudflared
 
@@ -47,6 +47,8 @@ RUN chmod +x /launcher.sh
 
 FROM scratch
 
-COPY --from=runtime / /.AppServiceLauncher/
+COPY --from=rexezugedockerutils/usagi-init:release / /
+
+COPY --from=runtime / /.AppServiceLauncher
 
 ENTRYPOINT ["/.AppServiceLauncher/launcher.sh"]
