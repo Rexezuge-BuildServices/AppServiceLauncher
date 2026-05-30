@@ -11,6 +11,8 @@ FROM rexezugedockerutils/chorddht AS chorddht
 
 FROM rexezugedockerutils/nginx-static AS nginx-static
 
+FROM rexezugedockerutils/usagi-init:release AS usagi-init
+
 FROM debian:12 AS builder
 
 WORKDIR /tmp
@@ -25,7 +27,7 @@ RUN mkdir -p /tmp/ChordDHT \
  && curl -o /tmp/ChordDHT/CERTIFICATE_REVOCATION_LIST.json -L "https://raw.githubusercontent.com/Rexezuge-ConfigurationFiles/ChordDHT-TrustAnchors/refs/heads/main/CERTIFICATE_REVOCATION_LIST.json" \
  && curl -o /tmp/ChordDHT/CERTIFICATE_AUTHORITY_PUBLIC_KEY.b64 -L "https://raw.githubusercontent.com/Rexezuge-ConfigurationFiles/ChordDHT-TrustAnchors/refs/heads/main/CERTIFICATE_AUTHORITY_PUBLIC_KEY.b64"
 
-FROM scratch AS runtime
+FROM scratch AS final-layer
 
 COPY --from=cloudflared /cloudflared /usr/local/bin/cloudflared
 
@@ -41,12 +43,18 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certifi
 
 COPY --from=su-exec-builder /tmp/su-exec /su-exec
 
+COPY --from=usagi-init /UsagiInit /UsagiInit
+
+COPY --from=usagi-init /usagi-reg /usagi-reg
+
 COPY overlay/ /
+
+FROM busybox:stable-musl AS runtime
+
+COPY --from=final-layer / /.AppServiceLauncher
 
 FROM scratch
 
-COPY --from=rexezugedockerutils/usagi-init:release / /
-
-COPY --from=runtime / /.AppServiceLauncher
+COPY --from=runtime / /
 
 ENTRYPOINT ["/.AppServiceLauncher/launcher.sh"]
