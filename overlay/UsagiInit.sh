@@ -15,6 +15,7 @@ if [ -n "$NODE_URI" ] && [ -n "$TRACKER_URL" ] && \
         -tls-cert /.AppServiceLauncher/etc/ssl/selfsigned/server.crt \
         -tls-key  /.AppServiceLauncher/etc/ssl/selfsigned/server.key \
         -log-level error \
+        -vnode-count 4 \
         -auth.enabled \
         -auth.ca-public-key-base64 "$ca_public_key_base64" \
         -auth.crl-file /.AppServiceLauncher/ChordDHT/CERTIFICATE_REVOCATION_LIST.json \
